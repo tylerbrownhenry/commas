@@ -20,6 +20,7 @@ import { openContextMenu } from '../utils/frame'
 import { handleMousePressing } from '../utils/helper'
 import { getShells } from '../utils/terminal'
 import TabItem from './TabItem.vue'
+import AddNewButton from './AddNewButton.vue'
 import SortableList from './basic/SortableList.vue'
 
 const lists = commas.proxy.context.getCollection('terminal.ui-side-list')
@@ -29,7 +30,7 @@ const tabs = $(useTerminalTabs())
 const terminal = $(useCurrentTerminal())
 let movingIndex = $(useMovingTerminalIndex())
 
-let width = $ref(176)
+let width = $ref(276)
 
 const settings = useSettings()
 
@@ -159,7 +160,10 @@ watchEffect(onInvalidate => {
             @click="activateTerminalTab(value)"
           />
         </SortableList>
-        <div ref="newTabElement" :class="['new-tab', { 'is-canceling-group': isCancelingGroup }]">
+
+        <AddNewButton/>
+        
+        <!-- <div ref="newTabElement" :class="['new-tab', { 'is-canceling-group': isCancelingGroup }]">
           <div v-if="shells.length" class="select-shell anchor" @click="selectShell">
             <span class="ph-bold ph-list-plus"></span>
           </div>
@@ -169,9 +173,9 @@ watchEffect(onInvalidate => {
             @contextmenu="selectShell"
           >
             <span v-if="movingGroupTab" class="ph-bold ph-link-break"></span>
-            <span v-else class="ph-bold ph-plus"></span>
+            <span v-else class="ph-bold ph-plus"></span>ssssss
           </div>
-        </div>
+        </div> -->
       </div>
       <component
         :is="list"
@@ -209,7 +213,7 @@ watchEffect(onInvalidate => {
     }
     :deep(.sortable-item) {
       flex: 1;
-      width: 176px;
+      width: 276px;
       min-width: 0;
     }
   }
@@ -220,7 +224,7 @@ watchEffect(onInvalidate => {
   flex: auto;
   .tab-list.vertical & {
     flex-direction: column;
-    width: 176px;
+    width: 276px;
   }
 }
 .default-list {

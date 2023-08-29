@@ -8,9 +8,13 @@ export interface LauncherInfo {
   remote?: string,
   explorer?: string,
   profile?: TerminalProfile,
+  tags?: string[],
   scripts?: LauncherInfo[],
 }
 
+
 export interface Launcher extends LauncherInfo {
   id: string,
+  tags?: string[],
 }
+

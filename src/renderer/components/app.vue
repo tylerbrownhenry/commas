@@ -27,6 +27,7 @@ import TabList from './TabList.vue'
 import TerminalView from './TerminalView.vue'
 import TitleBar from './TitleBar.vue'
 import '@phosphor-icons/web/bold'
+import '@phosphor-icons/web/regular'
 import 'devicon'
 
 const settings = useSettings()

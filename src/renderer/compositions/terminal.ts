@@ -716,6 +716,7 @@ export async function removeTerminalTab(tab: TerminalTab) {
 }
 
 export function activateTerminalTab(tab: TerminalTab) {
+  console.log('tab',tab);
   const index = getTerminalTabIndex(tab)
   if (index !== -1) {
     activeIndex = index

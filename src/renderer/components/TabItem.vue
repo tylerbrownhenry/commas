@@ -33,6 +33,7 @@ const isActive = $computed(() => {
 })
 
 const pane = $computed(() => {
+  console.log('tab',tab);
   if (!tab) return null
   return tab.pane
 })
@@ -57,6 +58,8 @@ const iconEntry = $computed(() => {
 })
 
 const title = $computed(() => {
+  console.log('character',character);
+
   if (character?.title) return character.title
   return tab ? getTerminalTabTitle(tab) : ''
 })
@@ -83,6 +86,7 @@ const thumbnail = $computed(() => {
 })
 
 function close() {
+  
   if (!closable && tab) {
     closeTerminalTab(tab)
   }
@@ -95,6 +99,7 @@ function close() {
     <div class="tab-item-card">
       <div class="tab-overview">
         <div class="tab-title">
+          <div v-if="idleState" :class="['idle-light', idleState]"></div>
           <span
             v-if="iconEntry"
             :style="{ color: isFocused ? iconEntry.color : 'inherit' }"
@@ -105,7 +110,6 @@ function close() {
           <span class="tab-name">{{ title }}</span>
         </div>
         <div class="right-side">
-          <div v-if="idleState" :class="['idle-light', idleState]"></div>
           <div class="operations">
             <slot name="operations"></slot>
             <div v-if="closable || tab" class="button close" @click.stop="close">
@@ -121,7 +125,9 @@ function close() {
 
 <style lang="scss" scoped>
 .tab-item {
-  padding: 8px;
+  padding: 25px; // 8px
+  padding-top: 10px;
+  cursor: pointer;
   .tab-list.vertical & {
     padding-bottom: 0;
   }
@@ -150,7 +156,13 @@ function close() {
 .tab-icon {
   display: inline-block;
   flex: none;
-  margin-right: 6px;
+  margin-right: 15px; // 6px
+  background: black;
+  border-radius: 5px;
+  padding: 5px;
+  font-size: 11px;
+  font-weight: 800;
+  margin-left: 0px;
 }
 .tab-name {
   flex: auto;
@@ -168,6 +180,9 @@ function close() {
   .tab-item.focused & {
     background: var(--design-card-background);
   }
+  .tab-item:hover & {
+    background: var(--design-card-background);
+  }
 }
 .tab-overview {
   position: relative;
@@ -181,13 +196,19 @@ function close() {
 }
 .idle-light {
   display: inline-block;
-  width: 6px;
-  height: 6px;
+  width: 10px;
+  height: 10px;
   margin: 0 6px;
   vertical-align: 1px;
   background: currentColor;
   border-radius: 50%;
   transition: color 0.2s;
+
+  position: absolute;
+  top: -5px;
+  width: 10px;
+  height: 10px;
+  left: -10px;
   &.busy {
     color: rgb(var(--system-green));
   }

@@ -178,6 +178,10 @@ watch($$(isFinding), (value: boolean) => {
   line-height: 26px;
 }
 .keyword {
+  border-radius: 10px;
+    padding: 10px;
+    height: 36px;
+    padding-left: 20px;
   flex: auto;
   padding: 2px 6px;
   border: none;
@@ -191,6 +195,9 @@ watch($$(isFinding), (value: boolean) => {
     color: rgb(var(--theme-foreground));
     opacity: 0.25;
   }
+  border-radius: 8px;
+  height: 36px;
+  padding-left: 15px;
 }
 .options {
   display: flex;

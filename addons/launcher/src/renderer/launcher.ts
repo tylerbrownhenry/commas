@@ -41,6 +41,7 @@ export function getTerminalTabCharacterByLauncher(launcher: Launcher) {
 }
 
 export function getTerminalTabsByLauncher(launcher: Launcher) {
+  console.log('launcher',launcher,'launcherCharacters',launcherCharacters);
   return commas.workspace.getTerminalTabsByCharacter(getTerminalTabCharacterByLauncher(launcher))
 }
 

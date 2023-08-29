@@ -15,6 +15,7 @@ import {
   useLaunchers,
 } from './launcher'
 
+import AddNewButton from './AddNewButton.vue'
 const { vI18n, SortableList, TabItem } = commas.ui.vueAssets
 
 const settings = commas.remote.useSettings()
@@ -26,7 +27,29 @@ const isHorizontal = $computed(() => {
   return position === 'top' || position === 'bottom'
 })
 
+const currentLabel = $ref('test');
+
+function getCurrentGroupLauncherItems(label: string) {
+  if (!label) return [];
+  return launcherItems.filter(item => groupedLaunchers[label]?.ids.includes(item.launcher.id));
+}
+
+
 const launchers = $(useLaunchers())
+const groupedLaunchers = $computed(() => {
+  const groups: { [label: string]: { launchers: Launcher[], ids: string[] } } = {};
+  for (const launcher of launchers) {
+    const label = launcher.label || 'Uncategorized';
+    if (!groups[label]) groups[label] = { launchers: [], ids: [] };
+    groups[label].launchers.push(launcher);
+    groups[label].ids.push(launcher.id);
+  }
+  return groups;
+});
+
+const currentGroupLauncherItems = $computed(() => {
+  return launcherItems.filter(item => groupedLaunchers[currentLabel]?.ids.includes(item.launcher.id));
+});
 
 let searcher = $ref<HTMLInputElement>()
 let isCollapsed: boolean = $ref(false)
@@ -39,6 +62,7 @@ const keywords = $computed(() => {
 })
 
 const filteredLaunchers = $computed(() => {
+  console.log('launchers',launchers, isCollapsed);
   return launchers.filter(launcher => {
     if (isCollapsed) {
       const launcherTabs = getTerminalTabsByLauncher(launcher)
@@ -158,19 +182,23 @@ function stopMoving() {
         </span>
       </div>
     </template>
-    <template v-else>
-      <div class="launcher-folder" @click="toggleCollapsing">
+      <template v-for="(launcher, label) in groupedLaunchers">
+        <div class="launcher-folder" @click="toggleCollapsing">
         <div :class="['group-name', { collapsed: isCollapsed }]">
           <span class="folder-icon">
-            <span :class="['ph-bold', isCollapsed ? 'ph-push-pin-simple' : 'ph-push-pin']"></span>
+            <span :class="['ph-bold', isCollapsed ? 'ph-caret-right' : 'ph-caret-down']"></span>
           </span>
+          <span class="folder-name">{{label}}</span>
+
         </div>
         <div class="buttons" @click.stop>
           <div
             :class="['button', 'more', { active: isAnyActionEnabled }]"
             @click="toggleActions"
           >
-            <span class="ph-bold ph-list"></span>
+          <span :class="['ph-bold', isAnyActionEnabled ? 'ph-list-magnifying-glass' : 'ph-x-circle']"></span>
+
+            <span class="ph-bold ph-list-magnifying-glass"></span>
           </div>
         </div>
         <div v-show="isActionsVisible" class="launcher-actions" @click.stop>
@@ -191,7 +219,7 @@ function stopMoving() {
       </div>
       <SortableList
         v-slot="{ value: { tab, character, launcher } }"
-        :value="launcherItems"
+        :value="getCurrentGroupLauncherItems(label)" 
         value-key="key"
         class="launchers"
         :disabled="isLauncherSortingDisabled"
@@ -223,8 +251,10 @@ function stopMoving() {
           </template>
         </TabItem>
       </SortableList>
+
+      <AddNewButton/>
       <div v-if="isEditing" class="new-launcher" @click="createLauncher">
-        <span class="ph-bold ph-plus"></span>
+        <span class="ph-bold ph-plus"></span>ggff
       </div>
     </template>
   </div>
@@ -287,6 +317,10 @@ function stopMoving() {
   margin-top: 8px;
 }
 .keyword {
+  border-radius: 10px;
+    padding: 10px;
+    height: 36px;
+    padding-left: 20px;
   flex: 1;
   width: 0;
   margin-right: 6px;
